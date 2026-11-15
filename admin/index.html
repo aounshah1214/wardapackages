@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Warda Packages — Admin Panel</title>
+<link rel="icon" href="../logo123.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#1A0A2E;--card:#2D1B4E;--card2:#3D2466;--line:rgba(123,94,167,.25);--mut:#C9B8E8;--grn:#6BBF59;--red:#E74C3C;--gold:#D4A843}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:#fff;min-height:100vh;line-height:1.5}
+button,input,textarea,select{font-family:inherit;font-size:14px}
+button{cursor:pointer;border:none}
+a{color:var(--grn)}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.auth{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 28px}
+.auth .logo{width:64px;height:64px;border-radius:14px;display:block;margin:0 auto 14px;object-fit:cover}
+.auth h1{font-size:20px;text-align:center;margin-bottom:4px}
+.auth p.sub{font-size:13px;color:var(--mut);text-align:center;margin-bottom:22px}
+label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:14px 0 6px}
+input[type=text],input[type=email],input[type=password],input[type=number],textarea,select{width:100%;background:var(--bg);border:1px solid var(--line);color:#fff;border-radius:10px;padding:11px 13px;outline:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--grn)}
+textarea{min-height:90px;resize:vertical}
+.hint{font-size:11px;color:var(--mut);margin-top:5px;opacity:.85}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border-radius:50px;font-weight:600;transition:all .15s;white-space:nowrap}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:var(--grn);color:var(--bg)}.btn-p:hover:not(:disabled){background:#5AB448}
+.btn-s{background:transparent;color:#fff;border:1px solid var(--line)}.btn-s:hover{background:var(--card2)}
+.btn-d{background:rgba(231,76,60,.12);color:#ff8a7d;border:1px solid rgba(231,76,60,.3)}
+.btn-full{width:100%;margin-top:22px}
+.err{background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.35);color:#ffb3aa;font-size:13px;padding:10px 12px;border-radius:10px;margin-top:14px;display:none}
+.link{background:none;color:var(--mut);font-size:12px;text-decoration:underline;margin-top:16px;display:block;margin-left:auto;margin-right:auto}
+.steps{font-size:12.5px;color:var(--mut);background:var(--bg);border-radius:10px;padding:12px 14px 12px 30px;margin-top:6px}
+.steps li{margin:3px 0}
+/* dashboard */
+.top{position:sticky;top:0;z-index:50;background:rgba(26,10,46,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.top .in{max-width:900px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.top img{width:34px;height:34px;border-radius:8px;object-fit:cover}
+.top .t{font-weight:700;font-size:15px;flex:1}
+.top .t small{display:block;font-weight:400;font-size:11px;color:var(--mut)}
+.top .btn{padding:8px 14px;font-size:12px}
+.wrap{max-width:900px;margin:0 auto;padding:22px 18px 120px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px}
+.card h2{font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card h2 span.c{font-size:12px;color:var(--mut);font-weight:500}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px}
+.row.off{opacity:.55}
+.row .th{width:58px;height:58px;border-radius:10px;object-fit:cover;background:#fff;flex-shrink:0}
+.row .info{flex:1;min-width:0}
+.row .info b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .info span{font-size:12px;color:var(--mut)}
+.row .info .old{text-decoration:line-through;opacity:.7;margin-left:6px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:50px;margin-left:6px;vertical-align:middle}
+.b-off{background:rgba(231,76,60,.18);color:#ff8a7d}
+.b-tag{background:rgba(107,191,89,.18);color:var(--grn)}
+.acts{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.ib{width:34px;height:34px;border-radius:9px;background:var(--card);color:#fff;border:1px solid var(--line);font-size:15px;display:flex;align-items:center;justify-content:center}
+.ib:hover:not(:disabled){background:var(--card2)}
+.ib:disabled{opacity:.3;cursor:default}
+.ib.del:hover{background:rgba(231,76,60,.25)}
+.sw{position:relative;width:42px;height:24px;flex-shrink:0;cursor:pointer}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#555;border-radius:24px;transition:.2s}
+.sw span:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--grn)}
+.sw input:checked+span:before{transform:translateX(18px)}
+.empty{text-align:center;color:var(--mut);padding:30px 10px;font-size:14px}
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card2);border-top:1px solid var(--line);transform:translateY(110%);visibility:hidden;transition:transform .25s,visibility .25s}
+.savebar.show{transform:none;visibility:visible}
+.savebar .in{max-width:900px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.savebar .msg{flex:1;font-size:13px;color:var(--gold);font-weight:600}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto}
+.modal{width:100%;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.modal h3{font-size:17px;margin-bottom:4px}
+.imgbox{display:flex;gap:14px;align-items:center;margin-top:4px}
+.imgbox img{width:110px;height:110px;border-radius:12px;object-fit:cover;background:#fff;flex-shrink:0}
+.imgbox .ph{width:110px;height:110px;border-radius:12px;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;text-align:center;flex-shrink:0}
+.mact{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:calc(100% - 28px);max-width:420px}
+.toast div{background:#fff;color:var(--bg);padding:11px 16px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.35);border-left:4px solid var(--grn);width:100%}
+.toast div.e{border-left-color:var(--red)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:600px){
+  .g2{grid-template-columns:1fr}
+  .row{flex-wrap:wrap}
+  .row .info{flex-basis:calc(100% - 74px)}
+  .acts{width:100%;justify-content:flex-end;border-top:1px solid var(--line);padding-top:8px}
+  .top .hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app"><div class="center"><span class="spin"></span></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   Warda Packages — Admin Panel (database ke baghair)
+   - Products: data/products.json (GitHub repo mein)
+   - Login: email + password. GitHub token aapke password se ENCRYPT ho kar
+     admin/auth.json mein save hota hai — password khud kahin save nahi hota.
+   ===================================================================== */
+var DEFAULTS = {
+  email:  "wardapackages8@gmail.com",
+  repo:   "YOUR-GITHUB-USERNAME/wardapackages",   // <- apna GitHub username/repo
+  branch: "main"
+};
+var PRODUCTS_PATH = "data/products.json";
+var AUTH_PATH     = "admin/auth.json";
+var IMG_DIR       = "images/products";
+var TAGS = ["", "Bestseller", "New", "Popular", "Sale", "Limited"];
+var KDF_ITER = 600000;
+
+var S = { auth:null, token:null, repo:null, branch:null, data:null, sha:null, dirty:false, pending:{} };
+
+/* ---------- helpers ---------- */
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function pkr(n){return "Rs. "+(Number(n)||0).toLocaleString("en-PK")}
+function toast(msg,err){var d=document.createElement("div");if(err)d.className="e";d.textContent=msg;$("#toast").appendChild(d);setTimeout(function(){d.remove()},err?6000:3500)}
+function slug(s){return (String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40))||"product"}
+function busy(btn,on,label){if(!btn)return;if(on){btn.dataset.l=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin"></span> '+(label||"")}else{btn.disabled=false;if(btn.dataset.l)btn.innerHTML=btn.dataset.l}}
+/* Nayi upload abhi deploy na hui ho to GitHub se seedha dikhao */
+function imgErr(el){var p=el.getAttribute('data-p');if(!p||el.dataset.f||!S.repo)return;el.dataset.f=1;el.src='https://raw.githubusercontent.com/'+S.repo+'/'+S.branch+'/'+p.replace(/^\/+/,'')}
+function imgSrc(p){
+  if(!p)return "";
+  if(S.pending[p])return S.pending[p].dataUrl;
+  if(/^(https?:)?\/\//.test(p)||p.indexOf("data:")===0)return p;
+  return "../"+String(p).replace(/^\/+/,"");
+}
+var B64={
+  fromBytes:function(u8){var s="";for(var i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)},
+  toBytes:function(b){var s=atob(String(b).replace(/\s/g,""));var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u},
+  fromText:function(t){return B64.fromBytes(new TextEncoder().encode(t))},
+  toText:function(b){return new TextDecoder().decode(B64.toBytes(b))}
+};
+
+/* ---------- crypto (PBKDF2 + AES-GCM) ---------- */
+function deriveKey(pw,salt,iter){
+  return crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]).then(function(base){
+    return crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+  });
+}
+async function encryptToken(token,pw,email,repo,branch){
+  email=email.trim().toLowerCase();
+  var salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  var key=await deriveKey(pw,salt,KDF_ITER);
+  var ct=await crypto.subtle.encrypt({name:"AES-GCM",iv:iv,additionalData:new TextEncoder().encode(email)},key,new TextEncoder().encode(token));
+  return {v:1,email:email,repo:repo,branch:branch,kdf:"PBKDF2-SHA256",iter:KDF_ITER,salt:B64.fromBytes(salt),iv:B64.fromBytes(iv),data:B64.fromBytes(new Uint8Array(ct))};
+}
+async function decryptToken(a,pw,email){
+  var key=await deriveKey(pw,B64.toBytes(a.salt),a.iter||KDF_ITER);
+  var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:B64.toBytes(a.iv),additionalData:new TextEncoder().encode(email.trim().toLowerCase())},key,B64.toBytes(a.data));
+  return new TextDecoder().decode(pt);
+}
+
+/* ---------- GitHub API ---------- */
+async function gh(path,opt){
+  opt=opt||{};
+  var h={"Accept":"application/vnd.github+json","Authorization":"Bearer "+S.token,"X-GitHub-Api-Version":"2022-11-28"};
+  if(opt.body)h["Content-Type"]="application/json";
+  var r=await fetch("https://api.github.com"+path,{method:opt.method||"GET",body:opt.body,headers:h,cache:"no-store"});
+  if(!r.ok){var m="";try{m=(await r.json()).message}catch(e){}var err=new Error(m||("HTTP "+r.status));err.status=r.status;throw err}
+  return r.status===204?null:r.json();
+}
+function cpath(p){return "/repos/"+S.repo+"/contents/"+p.split("/").map(encodeURIComponent).join("/")}
+async function getFile(p){
+  try{var j=await gh(cpath(p)+"?ref="+encodeURIComponent(S.branch)+"&t="+Date.now());return {sha:j.sha,text:B64.toText(j.content)}}
+  catch(e){if(e.status===404)return null;throw e}
+}
+async function putFile(p,b64,msg,sha){
+  var body={message:msg,content:b64,branch:S.branch};if(sha)body.sha=sha;
+  var j=await gh(cpath(p),{method:"PUT",body:JSON.stringify(body)});
+  return j.content.sha;
+}
+function friendlyErr(e){
+  if(e.status===401)return "GitHub token expire/ghalat hai. 'Setup / password bhool gaye' se naya token lagayein.";
+  if(e.status===403)return "Token ke paas permission nahi (Contents: Read and write chahiye).";
+  if(e.status===404)return "Repo nahi mila — repo ka naam aur token ka repo access check karein.";
+  if(e.status===409||(e.status===422&&/sha/i.test(e.message)))return "File kisi aur jagah se change hui hai. Page refresh karke dobara karein.";
+  if(e instanceof TypeError)return "Internet connection check karein.";
+  return e.message||"Kuch ghalat ho gaya.";
+}
+
+/* ---------- boot ---------- */
+async function boot(){
+  if(!window.crypto||!crypto.subtle){
+    $("#app").innerHTML='<div class="center"><div class="auth"><h1>HTTPS chahiye</h1><p class="sub" style="margin:10px 0 0">Admin panel sirf <b>https://</b> par chalta hai. GitHub → Settings → Pages mein "Enforce HTTPS" on karein, phir https://wardapackages.com/admin kholein.</p></div></div>';
+    return;
+  }
+  try{var r=await fetch("auth.json?v="+Date.now(),{cache:"no-store"});if(r.ok)S.auth=await r.json()}catch(e){}
+  try{
+    var s=JSON.parse(sessionStorage.getItem("wp_admin")||"null");
+    if(s&&s.token){S.token=s.token;S.repo=s.repo;S.branch=s.branch;return openDash()}
+  }catch(e){}
+  if(S.auth)showLogin();else showSetup(false);
+}
+function remember(){try{sessionStorage.setItem("wp_admin",JSON.stringify({token:S.token,repo:S.repo,branch:S.branch}))}catch(e){}}
+function logout(){
+  if(S.dirty&&!confirm("Changes save nahi hue. Phir bhi logout karein?"))return;
+  S.dirty=false;sessionStorage.removeItem("wp_admin");S.token=null;S.data=null;S.pending={};
+  if(S.auth)showLogin();else showSetup(false);
+}
+
+/* ---------- login ---------- */
+function showLogin(){
+  $("#app").innerHTML='<div class="center"><form class="auth" id="lf" autocomplete="on">'+
+    '<img class="logo" src="../images/logo123.png" alt="">'+
+    '<h1>Warda Packages</h1><p class="sub">Admin Panel Login</p>'+
+    '<label>Email</label><input type="email" id="le" required autocomplete="username" value="'+esc(S.auth&&S.auth.email||"")+'">'+
+    '<label>Password</label><input type="password" id="lp" required autocomplete="current-password">'+
+    '<div class="err" id="lerr"></div>'+
+    '<button class="btn btn-p btn-full" id="lb" type="submit">Login</button>'+
+    '<button class="link" type="button" id="lreset">Password bhool gaye? / Setup dobara karein</button>'+
+  '</form></div>';
+  $("#lp").focus();
+  $("#lreset").onclick=function(){showSetup(true)};
+  $("#lf").onsubmit=async function(ev){
+    ev.preventDefault();var btn=$("#lb"),er=$("#lerr");er.style.display="none";
+    busy(btn,true,"Checking…");
+    try{
+      var email=$("#le").value.trim().toLowerCase();
+      if(email!==String(S.auth.email).toLowerCase())throw new Error("bad");
+      S.token=await decryptToken(S.auth,$("#lp").value,email);
+      S.repo=S.auth.repo;S.branch=S.auth.branch||"main";remember();openDash();
+    }catch(e){busy(btn,false);er.textContent="Email ya password ghalat hai.";er.style.display="block";$("#lp").select()}
+  };
+}
+
+/* ---------- one-time setup ---------- */
+function showSetup(isReset){
+  var a=S.auth||{};
+  $("#app").innerHTML='<div class="center"><form class="auth" id="sf" style="max-width:460px">'+
+    '<img class="logo" src="../images/logo123.png" alt="">'+
+    '<h1>'+(isReset?'Login Reset':'Admin Panel Setup')+'</h1><p class="sub">Sirf ek dafa. Iske baad login sirf email + password se hoga.</p>'+
+    '<label>Admin Email</label><input type="email" id="se" required value="'+esc(a.email||DEFAULTS.email)+'">'+
+    '<div class="g2"><div><label>Password</label><input type="password" id="sp" required minlength="8" autocomplete="new-password"></div>'+
+    '<div><label>Password dobara</label><input type="password" id="sp2" required minlength="8" autocomplete="new-password"></div></div>'+
+    '<label>GitHub Repo (username/repo)</label><input type="text" id="sr" required value="'+esc(a.repo||DEFAULTS.repo)+'">'+
+    '<label>GitHub Token</label><input type="password" id="st" required placeholder="github_pat_..." autocomplete="off">'+
+    '<ol class="steps"><li>GitHub → Settings → Developer settings → Fine-grained tokens → Generate</li><li>Repository access: sirf <b>wardapackages</b></li><li>Permissions → Contents: <b>Read and write</b></li></ol>'+
+    '<div class="err" id="serr"></div>'+
+    '<button class="btn btn-p btn-full" id="sb" type="submit">Save & Login</button>'+
+    (S.auth?'<button class="link" type="button" id="sback">← Login par wapas</button>':'')+
+  '</form></div>';
+  if(S.auth)$("#sback").onclick=showLogin;
+  $("#sf").onsubmit=async function(ev){
+    ev.preventDefault();var btn=$("#sb"),er=$("#serr");er.style.display="none";
+    var email=$("#se").value.trim().toLowerCase(),pw=$("#sp").value,repo=$("#sr").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\.git$|\/$/g,""),tok=$("#st").value.trim();
+    function fail(m){busy(btn,false);er.textContent=m;er.style.display="block"}
+    if(pw!==$("#sp2").value)return fail("Dono passwords same nahi hain.");
+    if(pw.length<8)return fail("Password kam az kam 8 characters ka ho.");
+    if(!/^[\w.-]+\/[\w.-]+$/.test(repo)||/YOUR-GITHUB-USERNAME/.test(repo))return fail("Repo ka sahi naam likhein, jaise: aounkazmi/wardapackages");
+    busy(btn,true,"Saving…");
+    S.token=tok;S.repo=repo;S.branch=(S.auth&&S.auth.branch)||DEFAULTS.branch;
+    try{
+      var info=await gh("/repos/"+repo);
+      if(info.default_branch&&!(S.auth&&S.auth.branch))S.branch=info.default_branch;
+      var auth=await encryptToken(tok,pw,email,repo,S.branch);
+      var cur=await getFile(AUTH_PATH);
+      await putFile(AUTH_PATH,B64.fromText(JSON.stringify(auth,null,2)+"\n"),"Admin: login setup",cur&&cur.sha);
+      S.auth=auth;remember();toast("Setup complete! Agli dafa sirf email + password se login karein.");openDash();
+    }catch(e){S.token=null;fail(friendlyErr(e))}
+  };
+}
+
+/* ---------- dashboard ---------- */
+async function openDash(){
+  $("#app").innerHTML='<div class="center"><span class="spin"></span>&nbsp; Products load ho rahe hain…</div>';
+  try{
+    var f=await getFile(PRODUCTS_PATH);
+    S.data=f?JSON.parse(f.text):{title:"Bestselling Essentials",subtitle:"",items:[]};
+    if(!Array.isArray(S.data.items))S.data.items=[];
+    S.sha=f?f.sha:null;S.dirty=false;renderDash();
+  }catch(e){
+    if(e.status===401){sessionStorage.removeItem("wp_admin");S.token=null;toast(friendlyErr(e),1);return S.auth?showLogin():showSetup(false)}
+    $("#app").innerHTML='<div class="center"><div class="auth"><h1>Load nahi hua</h1><p class="sub" style="margin:10px 0 18px">'+esc(friendlyErr(e))+'</p><button class="btn btn-p btn-full" onclick="openDash()">Dobara try karein</button><button class="link" onclick="logout()">Logout</button></div></div>';
+  }
+}
+function setDirty(v){S.dirty=v;var b=$("#savebar");if(b)b.classList.toggle("show",v)}
+
+function renderDash(){
+  var d=S.data,items=d.items,shown=items.filter(function(x){return x.visible!==false}).length;
+  var rows=items.length?items.map(function(p,i){
+    var src=imgSrc(p.image);
+    return '<div class="row'+(p.visible===false?' off':'')+'">'+
+      (src?'<img class="th" src="'+esc(src)+'" data-p="'+esc(p.image)+'" onerror="imgErr(this)" alt="">':'<div class="th"></div>')+
+      '<div class="info"><b>'+esc(p.name||"(no name)")+(p.tag?'<span class="badge b-tag">'+esc(p.tag)+'</span>':'')+(p.visible===false?'<span class="badge b-off">Hidden</span>':'')+'</b>'+
+      '<span>'+pkr(p.price)+(p.oldPrice&&p.oldPrice>p.price?'<span class="old">'+pkr(p.oldPrice)+'</span>':'')+(p.category?' · '+esc(p.category):'')+'</span></div>'+
+      '<div class="acts">'+
+        '<label class="sw" title="Website par dikhana / chhupana"><input type="checkbox" '+(p.visible!==false?'checked':'')+' onchange="toggleVis('+i+',this.checked)"><span></span></label>'+
+        '<button class="ib" title="Upar" '+(i===0?'disabled':'')+' onclick="move('+i+',-1)">↑</button>'+
+        '<button class="ib" title="Neeche" '+(i===items.length-1?'disabled':'')+' onclick="move('+i+',1)">↓</button>'+
+        '<button class="ib" title="Edit" onclick="editProd('+i+')">✎</button>'+
+        '<button class="ib del" title="Delete" onclick="delProd('+i+')">🗑</button>'+
+      '</div></div>';
+  }).join(""):'<div class="empty">Abhi koi product nahi. "+ Add Product" se pehla product add karein.</div>';
+
+  $("#app").innerHTML=
+  '<div class="top"><div class="in"><img src="../images/logo123.png" alt=""><div class="t">Warda Packages<small>Admin Panel</small></div>'+
+    '<a class="btn btn-s hide-m" href="../" target="_blank" rel="noopener">View Website</a>'+
+    '<button class="btn btn-s" onclick="openSettings()">Settings</button>'+
+    '<button class="btn btn-s" onclick="logout()">Logout</button></div></div>'+
+  '<div class="wrap">'+
+    '<div class="card"><h2>Products Section</h2>'+
+      '<div class="g2"><div><label>Heading</label><input type="text" id="dtitle" value="'+esc(d.title||"")+'"></div>'+
+      '<div><label>Sub-heading</label><input type="text" id="dsub" value="'+esc(d.subtitle||"")+'"></div></div></div>'+
+    '<div class="card"><h2><span>Products <span class="c">('+shown+' visible / '+items.length+' total)</span></span><button class="btn btn-p" onclick="editProd(-1)">+ Add Product</button></h2>'+
+      '<div class="list">'+rows+'</div>'+
+      '<p class="hint" style="margin-top:12px">↑ ↓ se website par products ka order badlein · Switch OFF = product hide (delete nahi hota)</p></div>'+
+  '</div>'+
+  '<div class="savebar'+(S.dirty?' show':'')+'" id="savebar"><div class="in"><div class="msg">● Changes abhi save nahi hue</div>'+
+    '<button class="btn btn-s" onclick="discard()">Cancel</button><button class="btn btn-p" id="pubbtn" onclick="publish()">Save & Publish</button></div></div>';
+  $("#dtitle").oninput=function(){S.data.title=this.value;setDirty(true)};
+  $("#dsub").oninput=function(){S.data.subtitle=this.value;setDirty(true)};
+}
+function toggleVis(i,v){S.data.items[i].visible=v;setDirty(true);renderDash()}
+function move(i,dir){var a=S.data.items,j=i+dir;if(j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;setDirty(true);renderDash()}
+function delProd(i){var p=S.data.items[i];if(!confirm('"'+(p.name||"Product")+'" delete karein?\n\n(Sirf chhupana ho to switch OFF kar dein.)'))return;S.data.items.splice(i,1);setDirty(true);renderDash()}
+function discard(){if(!confirm("Saari unsaved changes khatam kar dein?"))return;Object.keys(S.pending).forEach(function(k){if(!S.pending[k].done)delete S.pending[k]});openDash()}
+
+/* ---------- add / edit product ---------- */
+function editProd(i){
+  var isNew=i<0,p=isNew?{visible:true,name:"",category:"",description:"",price:"",oldPrice:"",tag:"",image:""}:JSON.parse(JSON.stringify(S.data.items[i]));
+  var ov=document.createElement("div");ov.className="ov";
+  var tagOpts=TAGS.slice();if(p.tag&&tagOpts.indexOf(p.tag)<0)tagOpts.push(p.tag);
+  ov.innerHTML='<form class="modal" id="pf">'+
+    '<h3>'+(isNew?'Naya Product':'Product Edit')+'</h3>'+
+    '<label>Picture</label><div class="imgbox"><div id="pimgw"></div><div><input type="file" id="pfile" accept="image/*" style="display:none">'+
+      '<button type="button" class="btn btn-s" id="pbtn">Picture choose karein</button><p class="hint">Square (1:1) best. Badi photo khud chhoti ho jayegi.</p></div></div>'+
+    '<label>Product Name *</label><input type="text" id="pn" required value="'+esc(p.name)+'">'+
+    '<div class="g2"><div><label>Price (Rs.) *</label><input type="number" id="pp" required min="0" step="1" inputmode="numeric" value="'+esc(p.price)+'"></div>'+
+      '<div><label>Old Price (Rs.)</label><input type="number" id="pop" min="0" step="1" inputmode="numeric" value="'+esc(p.oldPrice||"")+'"><p class="hint">Discount dikhane ke liye (price se zyada)</p></div></div>'+
+    '<label>Description</label><textarea id="pd">'+esc(p.description)+'</textarea>'+
+    '<div class="g2"><div><label>Category</label><input type="text" id="pc" value="'+esc(p.category)+'"></div>'+
+      '<div><label>Tag / Badge</label><select id="pt">'+tagOpts.map(function(t){return '<option value="'+esc(t)+'"'+(t===p.tag?' selected':'')+'>'+(t||"— None —")+'</option>'}).join("")+'</select></div></div>'+
+    '<label style="display:flex;align-items:center;gap:10px;margin-top:16px"><span class="sw"><input type="checkbox" id="pv" '+(p.visible!==false?'checked':'')+'><span></span></span> Website par dikhayein</label>'+
+    '<div class="mact"><button type="button" class="btn btn-s" id="pcancel">Cancel</button><button type="submit" class="btn btn-p">'+(isNew?'Add Product':'Done')+'</button></div>'+
+  '</form>';
+  document.body.appendChild(ov);document.body.style.overflow="hidden";
+  function close(){ov.remove();document.body.style.overflow=""}
+  function drawImg(){var s=imgSrc(p.image);$("#pimgw").innerHTML=s?'<img src="'+esc(s)+'" data-p="'+esc(p.image)+'" onerror="imgErr(this)" alt="">':'<div class="ph">No picture</div>'}
+  drawImg();
+  $("#pcancel").onclick=close;
+  ov.addEventListener("mousedown",function(e){if(e.target===ov)close()});
+  $("#pbtn").onclick=function(){$("#pfile").click()};
+  $("#pfile").onchange=async function(){
+    var f=this.files&&this.files[0];if(!f)return;var b=$("#pbtn");busy(b,true,"Processing…");
+    try{
+      var r=await processImage(f);
+      var key="/"+IMG_DIR+"/"+slug($("#pn").value||f.name.replace(/\.[^.]+$/,""))+"-"+Date.now().toString(36)+"."+r.ext;
+      S.pending[key]={dataUrl:r.dataUrl,b64:r.b64,done:false};p.image=key;drawImg();
+    }catch(e){toast(e.message,1)}
+    busy(b,false);this.value="";
+  };
+  $("#pf").onsubmit=function(ev){
+    ev.preventDefault();
+    var name=$("#pn").value.trim(),price=parseInt($("#pp").value,10),op=parseInt($("#pop").value,10);
+    if(!name){toast("Product ka naam likhein",1);return}
+    if(isNaN(price)||price<0){toast("Sahi price likhein",1);return}
+    var out={visible:$("#pv").checked,name:name,category:$("#pc").value.trim(),description:$("#pd").value.trim(),price:price,tag:$("#pt").value,image:p.image||""};
+    if(!isNaN(op)&&op>0)out.oldPrice=op;
+    if(!out.image&&!confirm("Picture nahi lagayi. Phir bhi save karein?"))return;
+    if(isNew)S.data.items.push(out);else S.data.items[i]=out;
+    close();setDirty(true);renderDash();
+    toast(isNew?"Product add hua — ab 'Save & Publish' dabayein":"Updated — 'Save & Publish' dabayein");
+  };
+  setTimeout(function(){$("#pn").focus()},50);
+}
+
+function processImage(file){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      var max=1200,w=img.naturalWidth,h=img.naturalHeight,sc=Math.min(1,max/Math.max(w,h));
+      w=Math.max(1,Math.round(w*sc));h=Math.max(1,Math.round(h*sc));
+      var c=document.createElement("canvas");c.width=w;c.height=h;
+      var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      var d=c.toDataURL("image/webp",0.85),ext="webp";
+      if(d.indexOf("data:image/webp")!==0){d=c.toDataURL("image/jpeg",0.85);ext="jpg"}
+      res({dataUrl:d,b64:d.split(",")[1],ext:ext});
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error("Ye picture open nahi hui. JPG / PNG / WebP use karein."))};
+    img.src=url;
+  });
+}
+
+/* ---------- save & publish ---------- */
+async function publish(){
+  var btn=$("#pubbtn");busy(btn,true,"Saving…");
+  try{
+    var used={};S.data.items.forEach(function(p){if(p.image)used[p.image]=1});
+    var keys=Object.keys(S.pending).filter(function(k){return used[k]&&!S.pending[k].done});
+    for(var n=0;n<keys.length;n++){
+      btn.innerHTML='<span class="spin"></span> Picture '+(n+1)+'/'+keys.length+'…';
+      await putFile(keys[n].replace(/^\/+/,""),S.pending[keys[n]].b64,"Admin: image uploaded");
+      S.pending[keys[n]].done=true;
+    }
+    btn.innerHTML='<span class="spin"></span> Products save…';
+    var clean={title:S.data.title||"",subtitle:S.data.subtitle||"",items:S.data.items};
+    S.sha=await putFile(PRODUCTS_PATH,B64.fromText(JSON.stringify(clean,null,2)+"\n"),"Admin: products updated",S.sha);
+    setDirty(false);busy(btn,false);
+    toast("✅ Saved! 1–2 minute mein website par live ho jayega.");
+  }catch(e){busy(btn,false);toast("Save nahi hua: "+friendlyErr(e),1)}
+}
+
+/* ---------- settings: email / password change ---------- */
+function openSettings(){
+  var ov=document.createElement("div");ov.className="ov";
+  ov.innerHTML='<form class="modal" id="stf"><h3>Login Settings</h3><p class="hint">Email ya password badlein. Purana password yahan nahi chahiye kyunki aap login hain.</p>'+
+    '<label>Admin Email</label><input type="email" id="ne" required value="'+esc(S.auth&&S.auth.email||DEFAULTS.email)+'">'+
+    '<div class="g2"><div><label>Naya Password</label><input type="password" id="np" required minlength="8" autocomplete="new-password"></div>'+
+    '<div><label>Password dobara</label><input type="password" id="np2" required minlength="8" autocomplete="new-password"></div></div>'+
+    '<p class="hint" style="margin-top:14px">Repo: '+esc(S.repo)+' · Branch: '+esc(S.branch)+'</p>'+
+    '<div class="mact"><button type="button" class="btn btn-s" id="stc">Cancel</button><button type="submit" class="btn btn-p" id="sts">Save</button></div></form>';
+  document.body.appendChild(ov);
+  function close(){ov.remove()}
+  $("#stc").onclick=close;
+  $("#stf").onsubmit=async function(ev){
+    ev.preventDefault();var pw=$("#np").value;
+    if(pw!==$("#np2").value){toast("Dono passwords same nahi hain",1);return}
+    if(pw.length<8){toast("Password kam az kam 8 characters",1);return}
+    var b=$("#sts");busy(b,true,"Saving…");
+    try{
+      var auth=await encryptToken(S.token,pw,$("#ne").value,S.repo,S.branch);
+      var cur=await getFile(AUTH_PATH);
+      await putFile(AUTH_PATH,B64.fromText(JSON.stringify(auth,null,2)+"\n"),"Admin: login changed",cur&&cur.sha);
+      S.auth=auth;close();toast("✅ Login update ho gaya (1–2 min mein har jagah lagu).");
+    }catch(e){busy(b,false);toast(friendlyErr(e),1)}
+  };
+}
+
+window.addEventListener("beforeunload",function(e){if(S.dirty){e.preventDefault();e.returnValue=""}});
+boot();
+</script>
+</body>
+</html>

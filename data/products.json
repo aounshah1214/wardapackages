@@ -1,0 +1,36 @@
+{
+  "title": "Bestselling Essentials",
+  "subtitle": "Handcrafted with the finest natural ingredients for your home and family.",
+  "items": [
+    {
+      "visible": true,
+      "name": "Mosquito Killer Coil",
+      "category": "Indoor Protection",
+      "description": "Plant-based coils with citronella and lemongrass for effective, chemical-free mosquito protection.",
+      "price": 1499,
+      "oldPrice": 1999,
+      "tag": "Bestseller",
+      "image": "/images/relativeproducts.png"
+    },
+    {
+      "visible": true,
+      "name": "Mosquito Repellent Lotion",
+      "category": "Body Care",
+      "description": "Gentle, DEET-free lotion enriched with neem and eucalyptus for all-day protection.",
+      "price": 1899,
+      "oldPrice": 2499,
+      "tag": "New",
+      "image": "/images/relativeproducts.png"
+    },
+    {
+      "visible": true,
+      "name": "Luxury Spa Diffuser",
+      "category": "Home Aromatherapy",
+      "description": "Handcrafted ceramic diffuser with essential oil blends to purify and fragrance your space.",
+      "price": 3999,
+      "oldPrice": 4999,
+      "tag": "Popular",
+      "image": "/images/relativeproducts.png"
+    }
+  ]
+}
