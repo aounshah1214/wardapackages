@@ -147,18 +147,22 @@
 
         /* FOOTER */
         .footer{background:var(--p9);padding:50px 0 0}
-        .fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;padding-bottom:40px;border-bottom:1px solid rgba(123,94,167,.1)}
+        .fcols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:36px;padding-bottom:40px;border-bottom:1px solid rgba(123,94,167,.1)}
         .fbrand p{font-size:13px;color:var(--mut);line-height:1.7;margin:14px 0 18px;max-width:260px}
         .fsocials{display:flex;gap:10px}
         .fsicon{width:36px;height:36px;border-radius:50%;background:rgba(123,94,167,.12);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--mut);transition:all .15s}
         .fsicon:hover{background:var(--grn);color:var(--p9)}
-        .ftitle{font-size:13px;font-weight:600;margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em}
-        .flinks a{display:block;font-size:13px;color:var(--mut);padding:5px 0;transition:all .15s}
+        .fhead{font-size:13px;font-weight:600;margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em}
+        .flinks a,.flinks span{display:block;font-size:13px;color:var(--mut);padding:5px 0;transition:all .15s}
         .flinks a:hover{color:var(--grn);padding-left:3px}
         .fbottom{padding:20px 0;display:flex;align-items:center;justify-content:space-between}
         .fbottom p{font-size:12px;color:var(--mut)}
-        .fpay{display:flex;gap:8px}
-        .fpay iconify-icon{font-size:28px;color:var(--p4)}
+        .fpay{display:flex;gap:8px;flex-wrap:wrap}
+        .fpm{font-size:11px;font-weight:600;color:var(--mut);border:1px solid rgba(123,94,167,.3);padding:5px 12px;border-radius:50px}
+        .fct{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--mut);padding:5px 0;line-height:1.5;word-break:break-word}
+        .fct iconify-icon{color:var(--grn);font-size:16px;flex-shrink:0;margin-top:2px}
+        a.fct:hover{color:var(--grn)}
+        .fbrand .nav-logo img{width:32px;height:32px}
 
         /* CART — FIXED: full scroll on mobile, form inside scrollable area */
         .cov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -247,6 +251,7 @@
             .bgrid{grid-template-columns:repeat(2,1fr)}
             .fgrid{grid-template-columns:repeat(2,1fr)}
             .fgrid .fcard:last-child{grid-column:span 2}
+            .fcols{grid-template-columns:1fr 1fr}
         }
         @media(max-width:768px){
             .nlinks{display:none}.mob-btn{display:flex}
@@ -267,6 +272,7 @@
             .himg-w img{height:260px}
             .nobtn{font-size:9px;padding:5px 10px}
             .fgrid{grid-template-columns:1fr}
+            .fcols{grid-template-columns:1fr}
         }
         @media(max-width:480px){
             .container{padding:0 16px}
@@ -369,10 +375,10 @@
 
 <footer class="footer" id="footer">
     <div class="container">
-        <div class="fgrid" id="fgrid2"></div>
+        <div class="fcols" id="fgrid2"></div>
         <div class="fbottom">
             <p id="cpy"></p>
-            <div class="fpay"><iconify-icon icon="logos:visa"></iconify-icon><iconify-icon icon="logos:mastercard"></iconify-icon><iconify-icon icon="logos:paypal"></iconify-icon><iconify-icon icon="logos:apple-pay"></iconify-icon></div>
+            <div class="fpay"><span class="fpm">Cash on Delivery</span><span class="fpm">Bank Transfer</span></div>
         </div>
     </div>
 </footer>
@@ -402,6 +408,7 @@
                 <p>Send exact amount to:</p>
                 <div class="accno" id="pmAcc"></div>
                 <div class="accname">Account Name: <strong id="pmName"></strong></div>
+                <div class="accname" id="pmBankW" style="margin-top:4px;display:none">Bank: <strong id="pmBank"></strong></div>
                 <label style="margin-top:12px"><iconify-icon icon="lucide:hash" style="color:var(--grn);font-size:15px"></iconify-icon> Transaction ID / Reference</label>
                 <input type="text" id="cTxn" placeholder="Enter Transaction ID after payment">
             </div>
@@ -417,12 +424,17 @@
 <div class="toastc" id="toastc"></div>
 
 <script>
+/* Contact, bank and social details below are defaults only.
+   The live values come from data/settings.json (Admin Panel > Store Settings). */
 var C={
     name:"Warda Packages",
     wa:"923001234567",
-    acc:{bank:"PK36ABCD0000001234567890",holder:"Warda Packages"},
+    acc:{bank:"PK36ABCD0000001234567890",holder:"Warda Packages",name:""},
     delivery:"5-7 business days",
     support:"0300-1234567",
+    email:"",
+    address:"",
+    social:{instagram:"",facebook:"",tiktok:""},
     nav:[{l:"Home",h:"#home",a:1},{l:"Shop",h:"#products"},{l:"Features",h:"#features"},{l:"Benefits",h:"#benefits"},{l:"Reviews",h:"#testimonials"},{l:"Contact",h:"#footer"}],
     hero:{
         badge:"100% Natural Ingredients",
@@ -440,8 +452,8 @@ var C={
         {i:"lucide:heart-pulse",t:"Holistic Wellness",d:"Formulations designed to nurture your body, mind, and home with the healing power of nature."},
         {i:"lucide:hand-heart",t:"Ethical Sourcing",d:"We partner with sustainable farms to ensure fair practices from seed to shelf."}
     ],
-    /* Products ab data/products.json se aate hain (Admin Panel: /admin).
-       Neeche wali list sirf backup hai — agar JSON load na ho tab dikhegi. */
+    /* Products are loaded from data/products.json (managed in the Admin Panel at /admin).
+       This list is only a fallback in case that file cannot be loaded. */
     prods:[
         {id:1,n:"Mosquito Killer Coil",cat:"Indoor Protection",d:"Plant-based coils with citronella and lemongrass for effective, chemical-free mosquito protection.",p:1499,op:1999,tag:"Bestseller",img:"images/relativeproducts.png"},
         {id:2,n:"Mosquito Repellent Lotion",cat:"Body Care",d:"Gentle, DEET-free lotion enriched with neem and eucalyptus for all-day protection.",p:1899,op:2499,tag:"New",img:"images/relativeproducts.png"},
@@ -461,13 +473,7 @@ var C={
         {n:"Emily Chen",r:"Skin Care Enthusiast",av:"https://picsum.photos/seed/woman-emily/80/80.jpg",t:"The silken soap bar is my absolute favorite! My skin has never felt this smooth. Love that it's all natural.",s:5}
     ],
     footer:{
-        desc:"Warda Packages brings you the finest organic, eco-friendly home and body products. Safe for you, safe for the planet.",
-        social:[{i:"mdi:instagram",h:"#"},{i:"mdi:facebook",h:"#"},{i:"mdi:twitter",h:"#"},{i:"mdi:pinterest",h:"#"}],
-        cols:[
-            {t:"Shop",l:["All Products","Bestsellers","New Arrivals","Gift Sets","Sale"]},
-            {t:"Company",l:["About Us","Our Story","Sustainability","Careers","Press"]},
-            {t:"Support",l:["Help Center","Shipping Info","Returns","Track Order","Contact Us"]}
-        ]
+        desc:"Warda Packages brings you the finest organic, eco-friendly home and body products. Safe for you, safe for the planet."
     }
 };
 
@@ -489,9 +495,9 @@ function rHero(){
 function rFeats(){
     document.getElementById("fgrid").innerHTML=C.feats.map(function(f){return'<div class="fcard anim"><div class="ficon"><iconify-icon icon="'+f.i+'"></iconify-icon></div><h3 class="ftitle">'+f.t+'</h3><p class="fdesc">'+f.d+'</p></div>'}).join("");
 }
-/* Admin panel se aane wala text safe banane ke liye */
+/* Escape text coming from the Admin Panel */
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-/* "/images/products/x.jpg" -> "images/products/x.jpg" (har jagah chale) */
+/* "/images/products/x.jpg" -> "images/products/x.jpg" so paths work everywhere */
 function imgPath(s){s=String(s||"");if(/^(https?:)?\/\//.test(s)||s.indexOf("data:")===0)return s;return s.replace(/^\/+/,"")}
 
 function rProds(){
@@ -502,7 +508,7 @@ function rProds(){
     g.innerHTML=C.prods.map(function(p){return'<div class="pcard anim"><div class="pimg"><img src="'+esc(p.img)+'" alt="'+esc(p.n)+'" loading="lazy">'+(p.tag?'<span class="ptag">'+esc(p.tag)+'</span>':'')+'<button class="pwish" title="Wishlist"><iconify-icon icon="lucide:heart"></iconify-icon></button></div><div class="pinfo">'+(p.cat?'<div class="pcat">'+esc(p.cat)+'</div>':'')+'<h3 class="pname">'+esc(p.n)+'</h3><p class="pdesc">'+esc(p.d)+'</p><div class="pbot"><div class="pprice">'+pkr(p.p)+(p.op&&p.op>p.p?'<span class="old">'+pkr(p.op)+'</span>':'')+'</div><button class="padd" onclick="addC('+p.id+')" title="Add to Cart"><iconify-icon icon="lucide:plus"></iconify-icon></button></div></div></div>'}).join("");
 }
 
-/* data/products.json load karo (Admin Panel yahi file update karta hai) */
+/* Load data/products.json (the Admin Panel writes this file) */
 function loadProds(){
     return fetch("data/products.json?v="+Date.now(),{cache:"no-store"})
         .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
@@ -514,7 +520,25 @@ function loadProds(){
                 return{id:i+1,n:x.name,cat:x.category||"",d:x.description||"",p:Number(x.price)||0,op:Number(x.oldPrice)||0,tag:x.tag||"",img:imgPath(x.image)||"images/relativeproducts.png"};
             });
         })
-        .catch(function(e){console.warn("products.json load nahi hui, backup list use ho rahi hai:",e)});
+        .catch(function(e){console.warn("Could not load products.json, using fallback list:",e)});
+}
+
+/* Load data/settings.json (Admin Panel > Store Settings) */
+function loadSettings(){
+    return fetch("data/settings.json?v="+Date.now(),{cache:"no-store"})
+        .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+        .then(function(d){
+            if("phone" in d)C.support=d.phone||"";
+            if("whatsapp" in d)C.wa=d.whatsapp||"";
+            if("email" in d)C.email=d.email||"";
+            if("address" in d)C.address=d.address||"";
+            if(d.deliveryTime)C.delivery=d.deliveryTime;
+            if("bankAccount" in d)C.acc.bank=d.bankAccount||"";
+            if("accountHolder" in d)C.acc.holder=d.accountHolder||"";
+            if("bankName" in d)C.acc.name=d.bankName||"";
+            C.social={instagram:d.instagram||"",facebook:d.facebook||"",tiktok:d.tiktok||""};
+        })
+        .catch(function(e){console.warn("Could not load settings.json, using defaults:",e)});
 }
 function rBenefits(){
     document.getElementById("bgrid").innerHTML=C.benefits.map(function(b){return'<div class="bcard anim"><div class="bicon"><iconify-icon icon="'+b.i+'"></iconify-icon></div><h3 class="btitle">'+b.t+'</h3><p class="bdesc">'+b.d+'</p></div>'}).join("");
@@ -522,10 +546,23 @@ function rBenefits(){
 function rTests(){
     document.getElementById("tgrid").innerHTML=C.tests.map(function(t){return'<div class="tcard anim"><div class="tstars">'+Array(t.s).fill('<iconify-icon icon="lucide:star"></iconify-icon>').join("")+'</div><p class="ttext">"'+t.t+'"</p><div class="tauthor"><img src="'+t.av+'" alt="'+t.n+'" class="tavatar"><div><div class="tname">'+t.n+'</div><div class="trole">'+t.r+'</div></div></div></div>'}).join("");
 }
+/* WhatsApp link needs international format: 03001234567 -> 923001234567 */
+function waNum(n){n=String(n||"").replace(/\D/g,"");if(n.indexOf("0")===0)n="92"+n.slice(1);return n}
 function rFooter(){
-    var f=C.footer;
+    var f=C.footer,so=C.social||{},wa=waNum(C.wa);
     document.getElementById("cpy").textContent="© "+new Date().getFullYear()+" "+C.name+". All rights reserved.";
-    document.getElementById("fgrid2").innerHTML='<div class="fbrand"><a href="#" class="nav-logo"><iconify-icon icon="fluent-emoji-flat:herb"></iconify-icon><span>'+C.name+'</span></a><p>'+f.desc+'</p><div class="fsocials">'+f.social.map(function(s){return'<a href="'+s.h+'" class="fsicon"><iconify-icon icon="'+s.i+'"></iconify-icon></a>'}).join("")+'</div></div>'+f.cols.map(function(c){return'<div><h4 class="ftitle">'+c.t+'</h4><div class="flinks">'+c.l.map(function(l){return'<a href="#">'+l+'</a>'}).join("")+'</div></div>'}).join("");
+    var socials=[["mdi:instagram",so.instagram],["mdi:facebook",so.facebook],["ic:baseline-tiktok",so.tiktok],["mdi:whatsapp",wa?"https://wa.me/"+wa:""]]
+        .filter(function(x){return x[1]}).map(function(x){return'<a href="'+esc(x[1])+'" class="fsicon" target="_blank" rel="noopener"><iconify-icon icon="'+x[0]+'"></iconify-icon></a>'}).join("");
+    var contact=
+        (C.address?'<div class="fct"><iconify-icon icon="lucide:map-pin"></iconify-icon><span>'+esc(C.address).replace(/\n/g,"<br>")+'</span></div>':'')+
+        (C.support?'<a class="fct" href="tel:'+esc(String(C.support).replace(/[^\d+]/g,""))+'"><iconify-icon icon="lucide:phone"></iconify-icon><span>'+esc(C.support)+'</span></a>':'')+
+        (wa?'<a class="fct" href="https://wa.me/'+wa+'" target="_blank" rel="noopener"><iconify-icon icon="mdi:whatsapp"></iconify-icon><span>WhatsApp Us</span></a>':'')+
+        (C.email?'<a class="fct" href="mailto:'+esc(C.email)+'"><iconify-icon icon="lucide:mail"></iconify-icon><span>'+esc(C.email)+'</span></a>':'');
+    document.getElementById("fgrid2").innerHTML=
+        '<div class="fbrand"><a href="#home" class="nav-logo"><img src="images/logo123.png" alt=""><span>'+C.name+'</span></a><p>'+f.desc+'</p>'+(socials?'<div class="fsocials">'+socials+'</div>':'')+'</div>'+
+        '<div><h4 class="fhead">Quick Links</h4><div class="flinks"><a href="#home">Home</a><a href="#products">Shop</a><a href="#benefits">Why Choose Us</a><a href="#testimonials">Reviews</a></div></div>'+
+        '<div><h4 class="fhead">Customer Care</h4><div class="flinks"><a href="#" onclick="openOT();return false">Track My Order</a><span>Delivery: '+esc(C.delivery)+'</span><span>Cash on Delivery</span><span>Bank Transfer</span></div></div>'+
+        (contact?'<div><h4 class="fhead">Contact Us</h4>'+contact+'</div>':'');
 }
 
 function addC(id){
@@ -573,7 +610,7 @@ function hPM(){
     var s=document.querySelector('input[name="pm"]:checked');if(!s)return;
     var m=s.value,ins=document.getElementById("pmInst"),an=document.getElementById("pmAcc"),ah=document.getElementById("pmName");
     if(m==="Cash on Delivery"){ins.style.display="none"}
-    else{ins.style.display="block";ah.textContent=C.acc.holder;an.textContent=m==="Bank Transfer"?C.acc.bank:"Contact us"}
+    else{ins.style.display="block";ah.textContent=C.acc.holder;an.textContent=m==="Bank Transfer"?C.acc.bank:"Contact us";document.getElementById("pmBank").textContent=C.acc.name||"";document.getElementById("pmBankW").style.display=C.acc.name?"block":"none"}
 }
 document.querySelectorAll('input[name="pm"]').forEach(function(r){r.addEventListener("change",hPM)});
 
@@ -709,6 +746,7 @@ document.addEventListener("DOMContentLoaded",function(){
     if(getO())document.getElementById("nobtn").classList.add("show");
     initAnim();
     loadProds().then(function(){rProds();initAnim()});
+    loadSettings().then(function(){rFooter();hPM()});
 });
 </script>
 
